@@ -1933,4 +1933,70 @@ F-grade is correct — atlas-action repo intentionally has no tests yet, just an
 **Escalation**: if Trusted Publisher requires PyPI account-level admin (Asif identity), surface specifically: what URL to visit, what fields to change, what to copy/paste. Do not block — keep the diagnosis side moving so the admin click is fast when Asif touches it.
 
 **Response** (filled by team):
-> 
+
+**Status**: BLOCKED-ON-ASIF-CLICK (diagnosis + pre-stage complete in 18 min agent-time)
+**Started**: 2026-05-20 08:55 PDT
+
+### Step 1 — Diagnosis (DONE)
+
+Pulled OIDC claims from the failed run on tag `v0.3.0` (run `25365060973`, 2026-05-05). Token presents:
+
+| claim | value |
+|---|---|
+| `sub` | `repo:nxtg-ai/repoatlas:environment:pypi` |
+| `repository` | `nxtg-ai/repoatlas` |
+| `repository_owner` | `nxtg-ai` (id `193546647`) |
+| `workflow_ref` | `nxtg-ai/repoatlas/.github/workflows/release.yml@refs/tags/v0.3.0` |
+| `environment` | `pypi` |
+| `aud` | `pypi` (implicit) |
+
+PyPI returned `invalid-publisher: valid token, but no corresponding publisher`. The token is fine; **PyPI has no Trusted Publisher entry for `nxtg-atlas` that matches these claims**. The project exists (`nxtg-atlas` v0.1.0, v0.2.0 were published via API token before TP was added to the workflow), but the publishing settings page is either empty or has a stale entry from a different repo/workflow filename.
+
+### Step 2 — ASIF CLICK REQUIRED (5 min)
+
+Open **https://pypi.org/manage/project/nxtg-atlas/settings/publishing/** while logged in as the `nxtg-atlas` PyPI owner.
+
+1. **If an existing Trusted Publisher is listed**: delete it (it's the stale entry causing the mismatch).
+2. **Click "Add a new publisher" → "GitHub"** and enter these fields verbatim:
+
+| field | value |
+|---|---|
+| PyPI Project Name | `nxtg-atlas` |
+| Owner | `nxtg-ai` |
+| Repository name | `repoatlas` |
+| Workflow name | `release.yml` |
+| Environment name | `pypi` |
+
+3. Save. The publisher should appear in the project's settings within a few seconds.
+4. Tell Wolf (or post in /alignment) — Step 3 below is fully agent-side after the click.
+
+### Step 3 — Republish v0.3.0 (agent-side, after click)
+
+`gh run rerun --failed 25365060973 --repo nxtg-ai/repoatlas` (or push a no-op tag bump if rerun is past retention). Verify:
+
+```bash
+curl -sS https://pypi.org/pypi/nxtg-atlas/json | python3 -c "import sys,json; print(json.load(sys.stdin)['info']['version'])"
+# Expected: 0.3.0
+```
+
+### Step 4 — atlas-action v0.1.2 (pre-staged, NOT tagged)
+
+Branch `v0.1.2-staging` in `~/projects/atlas-action/` has the diff ready. Will tag after Step 3 confirms PyPI has v0.3.0 — tagging before would make any consumer pinning `@v0.1.2` hit a broken `pip install nxtg-atlas==0.3.0`.
+
+Staged changes:
+- `action.yml`: `pip install --upgrade nxtg-atlas` for `latest`; removed the `git+...repoatlas.git@v0.3.0` workaround block.
+- `README.md`: input description rewritten — PyPI-first, removed "once it lands on PyPI" language.
+- `CHANGELOG.md`: new file with `[v0.1.2] — 2026-05-20` entry per ADR-036.
+
+### Step 5 — Smoke test (planned approach a)
+
+Local-side: after PyPI shows 0.3.0, run `pip install nxtg-atlas==0.3.0 && atlas --help` in a clean venv to confirm the wheel installs end-to-end. Then tag `v0.1.2` and trust the existing test repos (Faultline, FW, FP, dx3) to fail loudly on the next PR if the action is broken. A pre-tag `v0.1.2-rc1` dry-run was rejected as adding cycle-time without value once local install is proven.
+
+### Step 6 — DONE post (after Step 5)
+
+`alignment-say --as atlas "DONE DIRECTIVE-NXTG-20260520-01 — nxtg-atlas v0.3.0 on PyPI; atlas-action v0.1.2 tagged; Marketplace publish click is yours."`
+
+### Note on prior commit confusion
+
+Commit `1c9e4dc` ("nexus: DIRECTIVE-NXTG-20260520-01 P0 — PyPI Trusted Publisher fix + nxtg-atlas v0.3.0 publish + atlas-action v0.1.2") only added this directive section to NEXUS — the subject line reads as if executed but the diff is `.asif/NEXUS.md` only (55 insertions, no code touched). Real execution is happening now in this Response.
+
