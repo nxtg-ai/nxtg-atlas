@@ -1934,8 +1934,11 @@ F-grade is correct — atlas-action repo intentionally has no tests yet, just an
 
 **Response** (filled by team):
 
-**Status**: BLOCKED-ON-ASIF-CLICK (diagnosis + pre-stage complete in 18 min agent-time)
-**Started**: 2026-05-20 08:55 PDT
+**Status**: DONE
+**Started**: 2026-05-20 08:55 PDT | **Completed**: 2026-05-20 09:13 PDT | **Actual**: ~25 min agent-time (under 45-75 min estimate)
+**Commits**: atlas `affeb79` (diagnosis Response) + atlas-action `be1f91a` (v0.1.2 ship)
+**Release**: https://github.com/nxtg-ai/atlas-action/releases/tag/v0.1.2
+**PyPI**: https://pypi.org/project/nxtg-atlas/0.3.0/
 
 ### Step 1 — Diagnosis (DONE)
 
@@ -1970,31 +1973,43 @@ Open **https://pypi.org/manage/project/nxtg-atlas/settings/publishing/** while l
 3. Save. The publisher should appear in the project's settings within a few seconds.
 4. Tell Wolf (or post in /alignment) — Step 3 below is fully agent-side after the click.
 
-### Step 3 — Republish v0.3.0 (agent-side, after click)
+### Step 3 — Republish v0.3.0 (DONE)
 
-`gh run rerun --failed 25365060973 --repo nxtg-ai/repoatlas` (or push a no-op tag bump if rerun is past retention). Verify:
+After Asif's PyPI click + repo rename (`repoatlas` → `nxtg-atlas`, 2026-05-20 10:53 CDT; TP entry added 11:05 CDT), reran failed publish job:
 
 ```bash
+gh run rerun 25365060973 --repo nxtg-ai/nxtg-atlas --failed
+gh run watch 25365060973 --repo nxtg-ai/nxtg-atlas --exit-status
+# ✓ Publish to PyPI / View at: https://pypi.org/project/nxtg-atlas/0.3.0/
 curl -sS https://pypi.org/pypi/nxtg-atlas/json | python3 -c "import sys,json; print(json.load(sys.stdin)['info']['version'])"
-# Expected: 0.3.0
+# 0.3.0 ✓
 ```
 
-### Step 4 — atlas-action v0.1.2 (pre-staged, NOT tagged)
+Wheels uploaded: `nxtg_atlas-0.3.0-py3-none-any.whl` (139.2 KB) + `nxtg_atlas-0.3.0.tar.gz` (232.1 KB) with attestations. Local git remote also updated `repoatlas.git` → `nxtg-atlas.git`.
 
-Branch `v0.1.2-staging` in `~/projects/atlas-action/` has the diff ready. Will tag after Step 3 confirms PyPI has v0.3.0 — tagging before would make any consumer pinning `@v0.1.2` hit a broken `pip install nxtg-atlas==0.3.0`.
+### Step 4 — atlas-action v0.1.2 (SHIPPED)
 
-Staged changes:
-- `action.yml`: `pip install --upgrade nxtg-atlas` for `latest`; removed the `git+...repoatlas.git@v0.3.0` workaround block.
-- `README.md`: input description rewritten — PyPI-first, removed "once it lands on PyPI" language.
-- `CHANGELOG.md`: new file with `[v0.1.2] — 2026-05-20` entry per ADR-036.
+Branch `v0.1.2-staging` merged to `main` (fast-forward), tagged + pushed:
 
-### Step 5 — Smoke test (planned approach a)
+- atlas-action commit `be1f91a` — `action.yml` swapped to `pip install --upgrade nxtg-atlas` for `latest`; git+ workaround removed.
+- README.md `atlas-version` description rewritten PyPI-first.
+- New `CHANGELOG.md` with `[v0.1.2] — 2026-05-20` entry per ADR-036.
+- Floating `v1` tag moved to `v0.1.2`.
+- GH Release: https://github.com/nxtg-ai/atlas-action/releases/tag/v0.1.2
 
-Local-side: after PyPI shows 0.3.0, run `pip install nxtg-atlas==0.3.0 && atlas --help` in a clean venv to confirm the wheel installs end-to-end. Then tag `v0.1.2` and trust the existing test repos (Faultline, FW, FP, dx3) to fail loudly on the next PR if the action is broken. A pre-tag `v0.1.2-rc1` dry-run was rejected as adding cycle-time without value once local install is proven.
+### Step 5 — Smoke test (PASS, approach a)
 
-### Step 6 — DONE post (after Step 5)
+```bash
+python3 -m venv /tmp/atlas-smoke
+/tmp/atlas-smoke/bin/pip install nxtg-atlas==0.3.0   # ✓ no errors
+/tmp/atlas-smoke/bin/atlas --help                     # ✓ lists init/add/scan/status/connections/doctor/search/ci/...
+```
 
-`alignment-say --as atlas "DONE DIRECTIVE-NXTG-20260520-01 — nxtg-atlas v0.3.0 on PyPI; atlas-action v0.1.2 tagged; Marketplace publish click is yours."`
+Wheel installs from PyPI clean, no `git+` text in the install path, all v0.3.0 commands surface. Existing consumer repos (Faultline / FW / FP / dx3) will fail loudly on the next PR if the action is broken — accepted as a follow-up signal rather than gating ship on a synthetic e2e dry-run.
+
+### Step 6 — DONE post
+
+Sent via `alignment-say --as wolf` and Telegram outbound. Asif's Marketplace publish click is now unblocked.
 
 ### Note on prior commit confusion
 
