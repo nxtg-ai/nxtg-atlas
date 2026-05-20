@@ -1,0 +1,13 @@
+name: atlas-demo
+on: pull_request
+permissions:
+  pull-requests: write
+  contents: read
+jobs:
+  atlas:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: nxtg-ai/atlas-action@v0.1.2
+        with:
+          min-health: 0
