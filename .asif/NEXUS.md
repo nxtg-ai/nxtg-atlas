@@ -1879,3 +1879,58 @@ F-grade is correct — atlas-action repo intentionally has no tests yet, just an
 - `nxtg-ai/atlas-action`: ad9543a (v0.1.0), 07253f9 (v0.1.1, smoke green), v0.1.1 + v1 tags
 - `nxtg-ai/repoatlas`: 7c06e4b (0.3.0 bump + CHANGELOG), v0.3.0 tag (PyPI publish blocked-on-Asif)
 
+
+## DIRECTIVE-NXTG-20260520-01 — P0: PyPI Trusted Publisher fix + nxtg-atlas v0.3.0 publish + atlas-action v0.1.2 install-cmd cleanup
+
+**From**: Wolf (NXTG-AI CoS) | **Priority**: P0
+**Injected**: 2026-05-20 08:48 PDT | **Estimate**: M (45-75 min agent-time) | **Status**: PENDING
+**Promise**: PRM-NXTG-20260520-03 | **Due**: 2h from injection (~10:48 PDT)
+**Origin**: EmmaSoul P0 routing 2026-05-20 10:42 CDT, Asif gating Marketplace publish — *"we don't want people to think we are amateur idiots"*
+
+**Primary-source verified (Wolf 08:47 PDT)**:
+- `curl https://pypi.org/pypi/nxtg-atlas/json` → latest=v0.2.0, releases=[0.1.0, 0.2.0] — NO v0.3.0
+- `git tag` on `~/projects/atlas` → v0.3.0 tagged 15+ days ago in source
+- 15-day silent-publish-fail gap, exactly the ADR-036 (Release Protocol Enforcement) failure class
+
+**Why this blocks Marketplace listing**: atlas-action `action.yml` currently uses `pip install git+https://github.com/nxtg-ai/repoatlas.git@v0.3.0` workaround to bypass the broken PyPI publish path. Marketplace listing would expose this to the public Actions ecosystem = unprofessional first-impression for the "credible enough to convert" bar Asif set.
+
+**Action Items** (6-step, sequenced):
+
+1. **Diagnose Trusted Publisher OIDC mismatch** on `nxtg-ai/repoatlas` → PyPI `nxtg-atlas` package. Likely candidates:
+   - `.github/workflows/release.yml` (or equivalent) `pypa/gh-action-pypi-publish` config mismatch with PyPI's Trusted Publisher settings (org/repo/workflow filename/environment)
+   - Environment-protected deploy mismatch
+   - PyPI account-side Trusted Publisher entry stale or pointing at wrong workflow path
+   - Check the failed-run logs from the last `invalid-publisher` error — exact `aud`/`sub`/`iss` claim mismatch will name the gap
+
+2. **Fix OIDC config** — could be repo-side OR PyPI-side (or both). If PyPI-side requires admin access, surface specifically what Asif needs to click; do NOT block.
+
+3. **Re-attempt PyPI publish of v0.3.0** — verify success via:
+   ```bash
+   curl -sS https://pypi.org/pypi/nxtg-atlas/json | python3 -c "import sys,json; d=json.load(sys.stdin); print(d['info']['version'])"
+   # Expected: 0.3.0
+   ```
+
+4. **Bump atlas-action to v0.1.2** — change action.yml install command from `pip install git+...repoatlas.git@v0.3.0` to clean `pip install nxtg-atlas==0.3.0`. Commit + tag v0.1.2 + push.
+
+5. **Smoke test atlas-action v0.1.2** — single repo dry-run (e.g., synthetic workflow file invoking `nxtg-ai/atlas-action@v0.1.2` against a test repo): confirm action installs nxtg-atlas v0.3.0 from PyPI clean, no `git+` text in logs, exit 0.
+
+6. **Report DONE to alignment** via `~/ASIF/scripts/alignment-say --as atlas "DONE..."` so Asif's Marketplace publish click can follow.
+
+**Allowed write paths**:
+- `~/projects/atlas/**` (repoatlas / nxtg-atlas Python package)
+- `~/projects/atlas-action/**` if separate, OR action.yml in repoatlas if monorepo
+- `~/projects/atlas/.asif/NEXUS.md` (this file, for response)
+
+**DoD**:
+- PASS: `curl pypi.org/pypi/nxtg-atlas/json` reports v0.3.0 + atlas-action v0.1.2 tagged on origin + smoke test green + alignment-say DONE post.
+- FAIL: PyPI still v0.2.0 after retry, OR atlas-action still using `git+` install, OR smoke fails.
+
+**Constraints**:
+- Test counts never decrease (per ASIF standard).
+- Trusted Publisher diagnostic: don't blanket-rewrite workflow — find the specific mismatch line first (claim shape, environment, workflow filename, branch protection).
+- Marketplace publish click stays Asif's per current rule — do NOT attempt the Marketplace listing yourselves.
+
+**Escalation**: if Trusted Publisher requires PyPI account-level admin (Asif identity), surface specifically: what URL to visit, what fields to change, what to copy/paste. Do not block — keep the diagnosis side moving so the admin click is fast when Asif touches it.
+
+**Response** (filled by team):
+> 
