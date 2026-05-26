@@ -1883,8 +1883,9 @@ F-grade is correct — atlas-action repo intentionally has no tests yet, just an
 ## DIRECTIVE-NXTG-20260520-01 — P0: PyPI Trusted Publisher fix + nxtg-atlas v0.3.0 publish + atlas-action v0.1.2 install-cmd cleanup
 
 **From**: Wolf (NXTG-AI CoS) | **Priority**: P0
-**Injected**: 2026-05-20 08:48 PDT | **Estimate**: M (45-75 min agent-time) | **Status**: PENDING
+**Injected**: 2026-05-20 08:48 PDT | **Estimate**: M (45-75 min agent-time) | **Status**: DONE
 **Promise**: PRM-NXTG-20260520-03 | **Due**: 2h from injection (~10:48 PDT)
+**Header-drift sync (Wolf 2026-05-26)**: header was stale-PENDING; response body DONE verified against ground truth — nxtg-atlas v0.3.0 live on PyPI (releases 0.1.0/0.2.0/0.3.0), atlas-action v0.1.2 tagged on origin (bda7329).
 **Origin**: EmmaSoul P0 routing 2026-05-20 10:42 CDT, Asif gating Marketplace publish — *"we don't want people to think we are amateur idiots"*
 
 **Primary-source verified (Wolf 08:47 PDT)**:
