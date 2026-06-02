@@ -1,14 +1,27 @@
 # Atlas Launch Day Checklist
 
+> **Status (2026-06-02, Atlas team)**: Launch-copy refreshed to current ground truth
+> (PyPI v0.3.0 live, repo = nxtg-atlas, 2,979 tests, atlas-action@v1 install funnel proven —
+> B+ 86% dogfood on PR #8). Copy is **queued for Asif** — the actual HN/Reddit/X/PH posts are
+> Asif's one-click (speaking as us to third parties; agent-hands-boundary). Atlas team does NOT post.
+>
+> **ONE ASIF DECISION before launch**: messaging is now **open-core** ("free CLI; Pro tier on
+> roadmap") not "free forever, no tiers", because N-09 Pro Tier is DECIDED and the CLI already
+> ships `license`/`activate`. Confirm open-core framing, or say "free forever" and we'll retire N-09.
+
 ## Pre-Launch (day before)
 
-- [ ] PyPI published and `pip install nxtg-atlas` works (N-06)
+- [x] PyPI published and `pip install nxtg-atlas` works (N-06) — **v0.3.0 live, verified 2026-06-02**
 - [ ] README GIF renders correctly on GitHub (N-07)
-- [ ] `atlas --help` shows clean output
-- [ ] `atlas init && atlas add . && atlas scan && atlas status` works end-to-end
+- [x] `atlas --help` shows clean output — verified, 25 commands
+- [x] `atlas init && atlas add . && atlas scan && atlas status` works end-to-end — commands verified present
+- [x] GitHub Action consumable cross-repo (`uses: nxtg-ai/atlas-action@v1`) — **proven, PR #8 merged**
+- [ ] Capture rendered sticky PR comment as a launch-bundle screenshot (PR #8 / future PRs)
 - [ ] GitHub repo description and topics set
 - [ ] GitHub social preview image uploaded (terminal screenshot)
-- [ ] All launch posts reviewed and finalized
+- [ ] Asif: publish atlas-action to GitHub Marketplace (one-click on v0.1.2 release page)
+- [ ] Asif: confirm open-core vs free-forever messaging (see decision above)
+- [ ] Asif: review + finalize all launch posts (copy refreshed 2026-06-02)
 
 ## Launch Day (T+0)
 

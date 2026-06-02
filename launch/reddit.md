@@ -21,9 +21,11 @@ atlas init && atlas batch-add ~/projects && atlas scan && atlas status
 
 30 seconds, 8 repos, 1.25M LOC. No network calls, no telemetry, no cloud. Everything runs locally.
 
-221 tests. MIT license. 100% free.
+There's also a GitHub Action — drop `uses: nxtg-ai/atlas-action@v1` into a workflow and every PR gets a sticky portfolio-health comment (the repo dogfoods it: PRs show 🟢 B+ 86%).
 
-GitHub: https://github.com/nxtg-ai/repoatlas
+2,979 tests. MIT license, open-core — the CLI is free; a Pro tier for heavier cross-project intelligence is on the roadmap.
+
+GitHub: https://github.com/nxtg-ai/nxtg-atlas
 PyPI: https://pypi.org/project/nxtg-atlas/
 
 Would love to hear what signals you'd want detected across a portfolio of repos.
@@ -47,9 +49,9 @@ atlas status
 
 Features: A-F health grades across 4 dimensions, tech stack detection (10+ languages, 15+ frameworks), cross-project intelligence (shared deps, version mismatches), markdown/JSON export.
 
-8 repos, 1.25M LOC scanned in 31 seconds. Zero network calls. State in a single JSON file.
+8 repos, 1.25M LOC scanned in 31 seconds. Zero network calls. State in a single JSON file. Optional GitHub Action (`uses: nxtg-ai/atlas-action@v1`) posts a sticky health comment on every PR.
 
-GitHub: https://github.com/nxtg-ai/repoatlas
+GitHub: https://github.com/nxtg-ai/nxtg-atlas
 
 ---
 

@@ -12,10 +12,10 @@ Atlas scans all your repositories and gives you a health dashboard in 30 seconds
 
 Health scoring across 4 dimensions (tests, git hygiene, documentation, structure). Tech stack detection for 10+ languages and 15+ frameworks. Cross-project intelligence finds shared dependencies, version mismatches, and health gaps.
 
-Zero network calls. Zero telemetry. Everything runs locally. 100% free and open source (MIT).
+Zero network calls. Zero telemetry. Everything runs locally. Free and open source (MIT). Optional GitHub Action posts a sticky portfolio-health comment on every PR (`uses: nxtg-ai/atlas-action@v1`).
 
 **Topics**: Developer Tools, Open Source, CLI, DevOps, Python
-**Pricing**: Free
+**Pricing**: Free CLI (open-core; Pro tier on roadmap)
 **Platforms**: macOS, Linux, Windows (Python 3.11+)
 
 ## Media

@@ -9,7 +9,7 @@ So I built Atlas -- a CLI that scans all your repos and gives you a portfolio he
 
 pip install nxtg-atlas
 
-Open source. MIT. Free forever.
+Open source, MIT. Free CLI, open-core.
 
 [demo GIF]
 
@@ -33,10 +33,17 @@ How it works:
 
 8 repos. 1.25M LOC. 31 seconds.
 
-**Tweet 4 (CTA)**:
-221 tests. MIT licensed.
+**Tweet 4 (CI integration)**:
+It runs in CI too. One line in your workflow and every PR gets a sticky portfolio-health comment:
 
-GitHub: https://github.com/nxtg-ai/repoatlas
+- uses: nxtg-ai/atlas-action@v1
+
+(nxtg-atlas dogfoods its own action — PRs show 🟢 B+ 86%.)
+
+**Tweet 5 (CTA)**:
+2,979 tests. MIT licensed.
+
+GitHub: https://github.com/nxtg-ai/nxtg-atlas
 PyPI: pip install nxtg-atlas
 
 What cross-project signals would be most useful to you?

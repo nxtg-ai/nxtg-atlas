@@ -3,7 +3,7 @@
 **Title** (80 char max):
 > Show HN: Atlas -- Portfolio intelligence for your repos (health, deps, patterns)
 
-**URL**: https://github.com/nxtg-ai/repoatlas
+**URL**: https://github.com/nxtg-ai/nxtg-atlas
 
 **Text** (HN post body):
 
@@ -30,7 +30,13 @@ What it does:
 
 Scanned 8 repos with 1.25M LOC in 31 seconds. State lives in ~/.atlas/portfolio.json -- portable, inspectable, no database.
 
-221 tests. MIT licensed. Everything free, no tiers.
+It also runs in CI. Drop the GitHub Action into any repo and every PR gets a sticky portfolio-health comment:
+
+    - uses: nxtg-ai/atlas-action@v1
+
+(This repo dogfoods its own action -- the health comment on nxtg-atlas PRs reads "🟢 B+ (86%)".)
+
+2,979 tests. MIT licensed, open-core: the full CLI is free and always will be; a Pro tier for heavier cross-project intelligence is on the roadmap.
 
 Built with Python, Typer, and Rich. Would love feedback on what cross-project signals would be most useful to detect next.
 
@@ -38,5 +44,5 @@ Built with Python, Typer, and Rich. Would love feedback on what cross-project si
 
 **Posting notes**:
 - Post Tuesday-Thursday, 9-10am ET (HN peak)
-- First comment: brief technical detail about how scanning works
+- First comment: brief technical detail about how scanning works (file parsing + git probes + a weighted health formula, all local)
 - Respond to every comment within 2 hours

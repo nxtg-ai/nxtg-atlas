@@ -486,8 +486,10 @@
 **Pillar**: DISTRIBUTION | **Status**: DECIDED | **Priority**: P1
 **What**: Launch on Hacker News + Reddit + Twitter same day. Product Hunt day 2-3.
 **Launch kit ready**: `launch/` directory has drafted posts for Show HN, Reddit (r/Python + r/commandline), Twitter/X thread, Product Hunt listing, and a day-of checklist with metrics targets.
-**Blocker**: N-06 (PyPI publish). Everything else is ready.
-**Next step**: Asif reviews launch copy in `launch/`, publishes to PyPI, then executes checklist.
+**Blocker**: ~~N-06 (PyPI publish)~~ **CLEARED** — nxtg-atlas v0.3.0 live on PyPI (verified 2026-06-02).
+**Copy refresh (2026-06-02, Atlas team)**: launch kit was March-vintage and stale. Refreshed to ground truth — repo URL repoatlas→nxtg-atlas (301 verified), test count 221→2,979, added the atlas-action@v1 CI angle (sticky PR-comment, proven B+ 86% dogfood on PR #8), and fixed "free forever/no tiers" → honest open-core (N-09 Pro Tier is DECIDED + `license`/`activate` already ship). All 5 files updated; commands verified against current CLI.
+**Status**: copy **QUEUED for Asif** — posting to HN/Reddit/X/PH is speaking-as-us-to-strangers (agent-hands-boundary); Atlas team does NOT post.
+**Asif gates before launch**: (1) confirm open-core vs free-forever messaging; (2) publish atlas-action to Marketplace (one-click); (3) review/finalize copy; then execute `launch/launch-checklist.md`.
 
 ### N-09: Pro Tier / Monetization
 **Pillar**: DISTRIBUTION | **Status**: DECIDED | **Priority**: P2
