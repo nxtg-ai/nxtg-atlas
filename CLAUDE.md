@@ -30,6 +30,24 @@ On every session start, recall relevant context from Dx3 before starting work:
 
 This is how the portfolio compounds intelligence. Your work benefits from every other team's learning.
 
+## Voice Identity
+**Voice**: `bm_lewis`
+**Service**: http://100.123.83.34:8880/v1/audio/speech
+**Registry**: ~/ASIF/standards/voice-registry.md (canonical SoT — supersedes portfolio-voice-registry.md)
+**Use**: every cycle-complete, every P0/P1 completion, every directive response — one-sentence summary in Atlas's voice.
+
+Canonical invocation (do NOT build a new service — use PP's endpoint via the portfolio gateway):
+```bash
+~/ASIF/scripts/cos-speak-remote --voice bm_lewis "One-sentence summary."
+```
+Direct endpoint fallback:
+```bash
+curl -sS -X POST http://100.123.83.34:8880/v1/audio/speech \
+  -H "Content-Type: application/json" \
+  -d '{"model":"kokoro","input":"...","voice":"bm_lewis","response_format":"wav"}' -o /tmp/voice.wav
+```
+**Rationale**: "Portfolio intelligence — measured, executive" (canonical registry recommendation for P-15). Adopted over the directive's older `am_adam` suggestion per the directive's push-back clause: the consolidated SoT recommends `bm_lewis` for Atlas and reserves `am_adam` for P-08 Faultline — zero collision.
+
 <!-- ASIF:TEAM-ALIGNMENT-WIRING:START -->
 ## ASIF Alignment Wiring
 

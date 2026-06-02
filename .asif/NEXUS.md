@@ -1465,7 +1465,7 @@ This project is governed by the ASIF portfolio. On every session:
 
 ### DIRECTIVE-NXTG-20260418-03 — P2: Voice Identity Adoption
 **From**: NXTG-AI CoS (Wolf) — Asif-initiated | **Priority**: P2
-**Injected**: 2026-04-18 13:48 PDT | **Estimate**: S (under 30 min) | **Status**: PENDING
+**Injected**: 2026-04-18 13:48 PDT | **Estimate**: S (under 30 min) | **Status**: DONE (2026-06-02, Atlas team)
 
 **Context**: PP (P-04) just shipped the portfolio voice service (`http://100.123.83.34:8880`). Asif directive: every team picks its own voice, owns it, and uses it always — no duplicates, no silent completion, no generic TTS fallback. Voice is team identity.
 
@@ -1496,6 +1496,14 @@ This project is governed by the ASIF portfolio. On every session:
 **Not required**: don't build a new service. Use PP's endpoint as-is. If you need streaming (long narrations, live dialogue), use `/v1/audio/speech/stream` — see PP's `docs/voice-service/user-guide.md`.
 
 **Why P2 Saturday**: low-stakes identity work, immediate quality-of-life improvement. Won't block anything. Pick up at your next session-start.
+
+**Response** (Atlas team):
+- **Started/Completed**: 2026-06-02 16:1x PDT | **Actual**: ~12 min | **Status**: DONE
+- **Voice picked**: `bm_lewis` (NOT the directive's `am_adam`) — exercised the directive's explicit push-back clause.
+- **Why bm_lewis**: The canonical SoT `~/ASIF/standards/voice-registry.md` (consolidated 2026-05-06, supersedes `portfolio-voice-registry.md`) **recommends `bm_lewis` for P-15 Atlas** — "Portfolio intelligence — measured, executive," a precise fit for a repo-atlas/portfolio-intelligence tool — and **reserves `am_adam` for P-08 Faultline**. The directive's `am_adam` predates that consolidation. Taking `bm_lewis` honors the newer SoT, fits the product character better, and avoids a soft-collision with Faultline's earmark (zero-dupe rule).
+- **Endpoint verified**: both `am_adam` and `bm_lewis` probed live against `http://100.123.83.34:8880/v1/audio/speech` → HTTP 200, valid 16-bit/24kHz WAV (bm_lewis 254KB). Service is up; no new service built (per "Not required").
+- **Shipped**: (1) `## Voice Identity` section added to `CLAUDE.md` with canonical `cos-speak-remote --voice bm_lewis` invocation + endpoint fallback; (2) registry claimed — `voice-registry.md` P-15 row `_unclaimed_` → `bm_lewis` (2026-06-02).
+- **Going forward**: Atlas speaks one-sentence summaries via `bm_lewis` on every cycle-complete / P0-P1 done / directive response.
 
 2. Execute any PENDING directives before other work (unless Asif overrides)
 3. Write your response inline under each directive
