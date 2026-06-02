@@ -3,7 +3,7 @@
 [![PyPI](https://img.shields.io/pypi/v/nxtg-atlas)](https://pypi.org/project/nxtg-atlas/)
 [![Python](https://img.shields.io/pypi/pyversions/nxtg-atlas)](https://pypi.org/project/nxtg-atlas/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Tests](https://img.shields.io/badge/tests-221%20passed-brightgreen)](https://github.com/nxtg-ai/repoatlas/actions)
+[![Tests](https://img.shields.io/badge/tests-2%2C979%20passed-brightgreen)](https://github.com/nxtg-ai/nxtg-atlas/actions)
 
 **Portfolio intelligence for AI engineering teams.**
 
@@ -192,10 +192,21 @@ No. Zero network calls. No telemetry. No analytics. Your code stays on your mach
 Each `atlas add` path is treated as one project. For monorepos, add the root.
 
 **Can I use it in CI?**
-Yes. `atlas ci` outputs JSON and exits non-zero on health violations:
+Yes. The published GitHub Action installs Atlas, runs the health check, and posts a
+sticky portfolio-health comment on every PR — one line in your workflow:
 
 ```yaml
-# GitHub Actions example
+# GitHub Actions
+- uses: nxtg-ai/atlas-action@v1
+  with:
+    min-health: '70'
+    min-project-health: '50'
+```
+
+(This repo dogfoods its own action — PRs get a 🟢 B+ health comment.) Prefer to run
+the CLI directly? `atlas ci` outputs JSON and exits non-zero on health violations:
+
+```yaml
 - run: atlas ci --min-health 70 --min-project-health 50
 ```
 
