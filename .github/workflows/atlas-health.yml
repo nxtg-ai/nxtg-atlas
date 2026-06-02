@@ -1,0 +1,25 @@
+name: Atlas Health (dogfood)
+
+# Dogfoods the published nxtg-ai/atlas-action@v1 against this repo:
+# proves the action installs nxtg-atlas from PyPI, runs `atlas ci`, and posts
+# a sticky portfolio-health PR comment cross-repo. Non-blocking (min-health 0).
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  atlas-health:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Atlas portfolio health
+        uses: nxtg-ai/atlas-action@v1
+        with:
+          atlas-version: latest
+          comment: 'true'
+          min-health: '0'
