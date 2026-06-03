@@ -806,7 +806,10 @@ def search(
                 for p in matches
             ],
         }
-        console.print(json_mod.dumps(data, indent=2))
+        # Plain print: machine-consumable JSON must never be width-wrapped by
+        # the Rich console (long paths/strings would get a soft-wrap newline
+        # injected mid-string, producing invalid JSON in narrow terminals).
+        print(json_mod.dumps(data, indent=2))
         return
 
     console.print()
@@ -1160,7 +1163,10 @@ def compare(
             "unique_frameworks_b": sorted(fw_b - fw_a),
             "shared_deps": sorted(deps_a & deps_b),
         }
-        console.print(json_mod.dumps(data, indent=2))
+        # Plain print: machine-consumable JSON must never be width-wrapped by
+        # the Rich console (long paths/strings would get a soft-wrap newline
+        # injected mid-string, producing invalid JSON in narrow terminals).
+        print(json_mod.dumps(data, indent=2))
         return
 
     if format == "csv":
@@ -1555,7 +1561,10 @@ def top(
                 for i, p in enumerate(projects, 1)
             ],
         }
-        console.print(json_mod.dumps(data, indent=2))
+        # Plain print: machine-consumable JSON must never be width-wrapped by
+        # the Rich console (long paths/strings would get a soft-wrap newline
+        # injected mid-string, producing invalid JSON in narrow terminals).
+        print(json_mod.dumps(data, indent=2))
         return
 
     if format == "csv":

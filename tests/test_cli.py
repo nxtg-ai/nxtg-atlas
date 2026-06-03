@@ -1652,6 +1652,20 @@ class TestCompare:
         assert isinstance(data["unique_frameworks_a"], list)
         assert isinstance(data["unique_frameworks_b"], list)
 
+    def test_compare_json_valid_in_narrow_terminal(self, portfolio_dir, tmp_path):
+        # Regression: machine-consumable --json output must stay valid JSON even
+        # in a narrow terminal. Rendering JSON through the Rich console soft-wraps
+        # long strings (e.g. paths), injecting a newline mid-string and producing
+        # invalid JSON. Force a 20-col console; the fix (plain print) is immune.
+        from rich.console import Console
+
+        self._add_two_projects(portfolio_dir, tmp_path)
+        with patch("atlas.cli.console", Console(width=20)):
+            result = runner.invoke(app, ["compare", "proj-a", "proj-b", "--format", "json"])
+        assert result.exit_code == 0
+        data = json.loads(result.output)  # raises if width-wrapped → guards the regression
+        assert data["project_a"]["name"] == "proj-a"
+
     def test_compare_csv_format(self, portfolio_dir, tmp_path):
         self._add_two_projects(portfolio_dir, tmp_path)
         result = runner.invoke(app, ["compare", "proj-a", "proj-b", "--format", "csv"])

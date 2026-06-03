@@ -2,6 +2,11 @@
 
 All notable changes to `nxtg-atlas` are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+- `atlas compare`, `atlas search`, and `atlas top` `--json`/`--format json` output is now emitted via plain `print` instead of the Rich console. The Rich console soft-wraps long strings to the terminal width, which could inject a newline mid-string (e.g. inside a long project path) and produce **invalid JSON** in narrow terminals. Machine-consumable output is now width-independent. Regression test added.
+
 ## [0.3.0] — 2026-05-05
 
 Major release. Adds new CLI commands (`ci`, `doctor`, `trends`, `compare`, `config`, `search`), expands detection by ~50 categories, and ships extensive cross-project intelligence. 2,979 tests passing.
