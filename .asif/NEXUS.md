@@ -490,7 +490,11 @@
 **Copy refresh (2026-06-02, Atlas team)**: launch kit was March-vintage and stale. Refreshed to ground truth — repo URL repoatlas→nxtg-atlas (301 verified), test count 221→2,979, added the atlas-action@v1 CI angle (sticky PR-comment, proven B+ 86% dogfood on PR #8), and fixed "free forever/no tiers" → honest open-core (N-09 Pro Tier is DECIDED + `license`/`activate` already ship). All 5 files updated; commands verified against current CLI.
 **Asif decisions (2026-06-02)**: (1) messaging = **open-core**, confirmed ("build a nice community around it"); (2) Marketplace listing is **LIVE** — the long-standing "pending Asif click" gate was STALE prose (listing returns 200: https://github.com/marketplace/actions/atlas-portfolio-health). Blocker-audit miss corrected.
 **REAL pre-post gate (was missed on the 3 prior portfolio HN attempts)**: the Show HN copy must clear the standing-order **53-item HN-SURVIVABILITY-RUBRIC** + **G1 external adversarial review** + **A7 account check** before posting — `~/ASIF/learning/hn-launch-engineering/`. Atlas's first draft was rewritten TO the rubric (single mode, no number buffet, one link, conversational). **Routed to Emma (CoS owns the rubric)** so the gate is deterministic this time. See `launch/launch-checklist.md` § HN gate.
-**Status**: BLOCKED-ON-HN-GATE (Emma rubric pass + G1). Not an Asif gate — a process gate that must run before any post.
+**HN gate RESULT (Emma, 2026-06-02 19:56–19:58)**: BODY cleared — D 14/14, C 5/5, H/I green, hard-blocks D1/D14 clean; G1 external review landed; first-comment drafted (E1–E4). **Two blockers remain, both Asif's:**
+1. **ACCOUNT (A1 RED — the root cause of the 3 botches)**: `vipdestiny` = karma 1 → near-certain flag-death. Need a seasoned **≥25-karma** account, or 1–2wk karma-build. Emma will NOT clear karma-1.
+2. **Org/brand-smell residual (I7/H4 "maybe")**: needs Asif's conscious risk-accept initial (not a rewrite — body fights it well).
+- Date target: Tue–Thu 8–9am PDT, Jun 3+ (clears A7 >14d post-RTD-flag-death).
+**Status**: BLOCKED-ON-HN-ACCOUNT + ASIF-RISK-ACCEPT. Body is launch-ready; do NOT fire from karma-1.
 
 ### N-09: Pro Tier / Monetization
 **Pillar**: DISTRIBUTION | **Status**: DECIDED | **Priority**: P2

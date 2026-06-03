@@ -37,10 +37,16 @@ It's MIT licensed. I'd genuinely like to know what cross-repo signals you'd find
 ---
 
 **Posting notes**:
-- Post Tue–Thu, ~9–10am ET (per playbook; Tuesday historically strongest).
-- ONE mode only — this body is tool-launch. Do NOT add metrics, the CI action, or
-  monetization here (that's mode-mixing, a hard-block). Put the GitHub Action and any
-  numbers in the FIRST COMMENT or the README, not the submission body.
-- First comment (after post lands): brief technical note on how the health formula
-  works, and mention the optional GitHub Action for CI as a "by the way."
+- 🚫 **ACCOUNT HARD-BLOCK (A1, Emma gate 2026-06-02)**: do NOT post from a low-karma
+  account. `vipdestiny` is karma=1 → near-certain flag-death (this is the 3x-botch root
+  cause). Post from a seasoned **≥25-karma** account, or karma-build 1–2 weeks first.
+- ⚠️ **Residual risk needs Asif's conscious accept (I7/H4 "maybe")**: org/brand smell — a
+  cynic reads `pip install nxtg-atlas` → github.com/nxtg-ai → AI-org shipping a branded pkg.
+  Body fights it (local/no-telemetry/no-account/MIT/honest-limits) but the smell remains.
+- Post **Tue–Thu, 8–9am PDT** (Emma F4 slot; earliest target Jun 3+, clears A7 >14d after the
+  RTD flag-death).
+- Body cleared by Emma: D 14/14, C 5/5, H/I content green; G1 external review landed.
+- ONE mode only — body is tool-launch. Keep metrics, the CI action, and monetization OUT of
+  the body (mode-mixing = hard-block); they go in the first comment / README.
+- First comment: Emma drafted it ready-to-paste (clears E1–E4) — see her gate file.
 - Respond to every comment within ~2 hours, plainly, no marketing register.
