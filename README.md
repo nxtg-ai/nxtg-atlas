@@ -3,7 +3,7 @@
 [![PyPI](https://img.shields.io/pypi/v/nxtg-atlas)](https://pypi.org/project/nxtg-atlas/)
 [![Python](https://img.shields.io/pypi/pyversions/nxtg-atlas)](https://pypi.org/project/nxtg-atlas/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Tests](https://img.shields.io/badge/tests-2%2C979%20passed-brightgreen)](https://github.com/nxtg-ai/nxtg-atlas/actions)
+[![Tests](https://img.shields.io/badge/tests-2%2C980%20passed-brightgreen)](https://github.com/nxtg-ai/nxtg-atlas/actions)
 
 **Portfolio intelligence for AI engineering teams.**
 

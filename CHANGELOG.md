@@ -4,6 +4,8 @@ All notable changes to `nxtg-atlas` are documented here. The format is based on 
 
 ## [Unreleased]
 
+## [0.3.1] — 2026-06-02
+
 ### Fixed
 - `atlas compare`, `atlas search`, and `atlas top` `--json`/`--format json` output is now emitted via plain `print` instead of the Rich console. The Rich console soft-wraps long strings to the terminal width, which could inject a newline mid-string (e.g. inside a long project path) and produce **invalid JSON** in narrow terminals. Machine-consumable output is now width-independent. Regression test added.
 
