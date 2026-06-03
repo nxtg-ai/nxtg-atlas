@@ -1,13 +1,25 @@
 # Atlas Launch Day Checklist
 
-> **Status (2026-06-02, Atlas team)**: Launch-copy refreshed to current ground truth
-> (PyPI v0.3.0 live, repo = nxtg-atlas, 2,979 tests, atlas-action@v1 install funnel proven —
-> B+ 86% dogfood on PR #8). Copy is **queued for Asif** — the actual HN/Reddit/X/PH posts are
-> Asif's one-click (speaking as us to third parties; agent-hands-boundary). Atlas team does NOT post.
+> **Status (2026-06-02, Atlas team)**: Copy refreshed to ground truth. Messaging = **open-core**
+> (Asif confirmed 2026-06-02 — "build a nice community around it"). Marketplace listing is **LIVE**
+> (https://github.com/marketplace/actions/atlas-portfolio-health — verified 200; the old "pending
+> Asif click" gate was STALE prose, corrected).
 >
-> **ONE ASIF DECISION before launch**: messaging is now **open-core** ("free CLI; Pro tier on
-> roadmap") not "free forever, no tiers", because N-09 Pro Tier is DECIDED and the CLI already
-> ships `license`/`activate`. Confirm open-core framing, or say "free forever" and we'll retire N-09.
+> 🚫 **NOT launch-ready.** The HN copy must clear the portfolio standing-order gate before posting —
+> see "HN gate" below. This is the gap that killed the last 3 attempts: the
+> `~/ASIF/learning/hn-launch-engineering/` rubric exists but wasn't applied. Routing to Emma (CoS),
+> who owns the rubric, so it's gated deterministically this time.
+>
+> **Posting boundary**: Asif posts (or names a pre-approved channel). Atlas drafts + gates; does not
+> post as Asif to strangers.
+
+## HN gate (STANDING ORDER — blocks the Show HN post)
+
+- [ ] **Emma runs the 53-item HN-SURVIVABILITY-RUBRIC** on `show-hn.md` (`~/ASIF/learning/hn-launch-engineering/02-HN-SURVIVABILITY-RUBRIC.md`). No lock without it.
+- [ ] **G1 — external adversarial review** ("what would HN's filter flag in this?") captured in an `external-review-<date>.md`.
+- [ ] **A7 account check** — posting account has karma/age and NO flag-dead submission in the last 14 days (hard-block).
+- [ ] Hard-block scan green: D1 (no curl|bash), D14 (single mode — body is tool-launch only), D13 (no unearned headline numbers), I7 (not "AI growth marketing"), H6 ("would a senior HN reader flag this?" = no).
+- Note: Atlas's first draft is already written TO the rubric (single mode, no number buffet, one link, conversational) — Emma's pass should be fast, not a rewrite.
 
 ## Pre-Launch (day before)
 
@@ -18,11 +30,12 @@
 - [x] `atlas --help` shows clean output — verified, 25 commands
 - [x] `atlas init && atlas add . && atlas scan && atlas status` works end-to-end — commands verified present
 - [x] GitHub Action consumable cross-repo (`uses: nxtg-ai/atlas-action@v1`) — **proven, PR #8 merged**
-- [ ] GitHub repo description and topics set
+- [x] GitHub repo description and topics set — verified good (8 topics, homepage set)
+- [x] atlas-action published to GitHub Marketplace — **LIVE** (listing returns 200), prior "pending click" was stale
+- [x] Open-core messaging confirmed (Asif, 2026-06-02)
 - [ ] GitHub social preview image uploaded (terminal screenshot)
-- [ ] Asif: publish atlas-action to GitHub Marketplace (one-click on v0.1.2 release page)
-- [ ] Asif: confirm open-core vs free-forever messaging (see decision above)
-- [ ] Asif: review + finalize all launch posts (copy refreshed 2026-06-02)
+- [ ] **HN gate cleared** (see "HN gate" section above) — the real pre-post blocker
+- [ ] Asif: post (or name a pre-approved channel) once the HN gate is green
 
 ## Launch Day (T+0)
 

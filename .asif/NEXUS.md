@@ -488,8 +488,9 @@
 **Launch kit ready**: `launch/` directory has drafted posts for Show HN, Reddit (r/Python + r/commandline), Twitter/X thread, Product Hunt listing, and a day-of checklist with metrics targets.
 **Blocker**: ~~N-06 (PyPI publish)~~ **CLEARED** — nxtg-atlas v0.3.0 live on PyPI (verified 2026-06-02).
 **Copy refresh (2026-06-02, Atlas team)**: launch kit was March-vintage and stale. Refreshed to ground truth — repo URL repoatlas→nxtg-atlas (301 verified), test count 221→2,979, added the atlas-action@v1 CI angle (sticky PR-comment, proven B+ 86% dogfood on PR #8), and fixed "free forever/no tiers" → honest open-core (N-09 Pro Tier is DECIDED + `license`/`activate` already ship). All 5 files updated; commands verified against current CLI.
-**Status**: copy **QUEUED for Asif** — posting to HN/Reddit/X/PH is speaking-as-us-to-strangers (agent-hands-boundary); Atlas team does NOT post.
-**Asif gates before launch**: (1) confirm open-core vs free-forever messaging; (2) publish atlas-action to Marketplace (one-click); (3) review/finalize copy; then execute `launch/launch-checklist.md`.
+**Asif decisions (2026-06-02)**: (1) messaging = **open-core**, confirmed ("build a nice community around it"); (2) Marketplace listing is **LIVE** — the long-standing "pending Asif click" gate was STALE prose (listing returns 200: https://github.com/marketplace/actions/atlas-portfolio-health). Blocker-audit miss corrected.
+**REAL pre-post gate (was missed on the 3 prior portfolio HN attempts)**: the Show HN copy must clear the standing-order **53-item HN-SURVIVABILITY-RUBRIC** + **G1 external adversarial review** + **A7 account check** before posting — `~/ASIF/learning/hn-launch-engineering/`. Atlas's first draft was rewritten TO the rubric (single mode, no number buffet, one link, conversational). **Routed to Emma (CoS owns the rubric)** so the gate is deterministic this time. See `launch/launch-checklist.md` § HN gate.
+**Status**: BLOCKED-ON-HN-GATE (Emma rubric pass + G1). Not an Asif gate — a process gate that must run before any post.
 
 ### N-09: Pro Tier / Monetization
 **Pillar**: DISTRIBUTION | **Status**: DECIDED | **Priority**: P2
