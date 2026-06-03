@@ -29,3 +29,8 @@ permanent public URL:
 - Show HN / Reddit / X: link PR #8 as live proof the CI action works (more persuasive than a static image).
 - Marketplace listing: this comment is the "what you get" screenshot — re-capture from any future PR once the Marketplace listing is published.
 - A high-res static image (for PH gallery / GH social preview) can be grabbed from the live PR when desired.
+
+## Static capture
+
+`./atlas-action-pr-comment-proof.png` — 808×289 screenshot of the rendered sticky comment
+on PR #8, captured 2026-06-02. Drop-in for the Marketplace listing / launch gallery.

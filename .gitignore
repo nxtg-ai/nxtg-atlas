@@ -11,3 +11,6 @@ build/
 .coverage
 htmlcov/
 .local-*
+
+# Playwright MCP scratch
+.playwright-mcp/
