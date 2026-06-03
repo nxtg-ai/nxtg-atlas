@@ -24,7 +24,7 @@
 ## Pre-Launch (day before)
 
 - [x] PyPI published and `pip install nxtg-atlas` works (N-06) — **v0.3.0 live, verified 2026-06-02**
-- [ ] **Cut v0.3.1 before launch** — includes the `--json` width-wrap fix (commit e8b2498). PyPI v0.3.0 currently ships invalid-JSON-in-narrow-terminal for `compare/search/top --json`; the launch audience pipes `--json | jq`, so publish the patch so `pip install` serves the fix.
+- [x] **v0.3.1 published** — `pip install nxtg-atlas` now serves the `--json` width-wrap fix. PyPI 0.3.1 live + GH release v0.3.1; verified on a clean-venv install (0 `console.print(json`, fix present). Run 26857037685 green.
 - [x] Capture rendered sticky PR comment as a launch-bundle screenshot — **launch/assets/atlas-action-pr-comment-proof.png**
 - [ ] README GIF renders correctly on GitHub (N-07)
 - [x] `atlas --help` shows clean output — verified, 25 commands
