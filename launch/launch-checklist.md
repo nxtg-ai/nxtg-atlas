@@ -12,11 +12,12 @@
 ## Pre-Launch (day before)
 
 - [x] PyPI published and `pip install nxtg-atlas` works (N-06) — **v0.3.0 live, verified 2026-06-02**
+- [ ] **Cut v0.3.1 before launch** — includes the `--json` width-wrap fix (commit e8b2498). PyPI v0.3.0 currently ships invalid-JSON-in-narrow-terminal for `compare/search/top --json`; the launch audience pipes `--json | jq`, so publish the patch so `pip install` serves the fix.
+- [x] Capture rendered sticky PR comment as a launch-bundle screenshot — **launch/assets/atlas-action-pr-comment-proof.png**
 - [ ] README GIF renders correctly on GitHub (N-07)
 - [x] `atlas --help` shows clean output — verified, 25 commands
 - [x] `atlas init && atlas add . && atlas scan && atlas status` works end-to-end — commands verified present
 - [x] GitHub Action consumable cross-repo (`uses: nxtg-ai/atlas-action@v1`) — **proven, PR #8 merged**
-- [ ] Capture rendered sticky PR comment as a launch-bundle screenshot (PR #8 / future PRs)
 - [ ] GitHub repo description and topics set
 - [ ] GitHub social preview image uploaded (terminal screenshot)
 - [ ] Asif: publish atlas-action to GitHub Marketplace (one-click on v0.1.2 release page)
