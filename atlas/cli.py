@@ -1239,14 +1239,25 @@ def batch_add(
     ) as progress:
         task = progress.add_task("Adding projects...", total=len(candidates))
 
-        for child in candidates:
-            progress.update(task, description=f"Scanning [cyan]{child.name}[/cyan]...")
-            project = scan_project(child)
-            portfolio.projects.append(project)
-            progress.advance(task)
+        added = 0
+        try:
+            for child in candidates:
+                progress.update(task, description=f"Scanning [cyan]{child.name}[/cyan]...")
+                project = scan_project(child)
+                portfolio.projects.append(project)
+                # Save incrementally so a slow or interrupted run never loses progress
+                # (a large portfolio can take a while; Ctrl-C should keep what's done).
+                _save_portfolio(portfolio)
+                added += 1
+                progress.advance(task)
+        except KeyboardInterrupt:
+            console.print(
+                f"\n  [yellow]Interrupted.[/yellow] Saved [bold]{added}[/bold] of "
+                f"{len(candidates)} projects \u2014 rerun [cyan]atlas batch-add[/cyan] to add the rest.\n"
+            )
+            raise typer.Exit(130)
 
-    _save_portfolio(portfolio)
-    console.print(f"\n  [green]\u2713[/green] Added [bold]{len(candidates)}[/bold] projects to portfolio")
+    console.print(f"\n  [green]\u2713[/green] Added [bold]{added}[/bold] projects to portfolio")
     console.print("  Run [cyan]atlas status[/cyan] to see the dashboard\n")
 
 

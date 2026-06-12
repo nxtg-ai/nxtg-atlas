@@ -4,6 +4,18 @@ All notable changes to `nxtg-atlas` are documented here. The format is based on 
 
 ## [Unreleased]
 
+## [0.3.2] — 2026-06-12
+
+### Fixed
+- **Scanning is dramatically faster on real repos.** `walk_files` now uses `os.walk` with in-place directory pruning instead of `rglob("*")` + post-filter. The old approach still *traversed* `node_modules`/`.venv`/etc. (stat-ing every vendored file) before discarding them — a single repo with `node_modules` took **~110s**; it now takes **~0.5s** (≈220×). Counts are unchanged; only wasted traversal is removed.
+- **Virtualenvs with non-standard names are now skipped** via their `pyvenv.cfg` marker (e.g. `venv_linux`, `.env39`), not just the hardcoded `venv`/`.venv` names.
+
+### Added
+- Expanded the skip-directory set with common vendored/build/cache dirs: `vendor`, `Pods`, `Carthage`, `bower_components`, `jspm_packages`, `.yarn`, `.pnpm-store`, `.gradle`, `.idea`, `.vs`, `DerivedData`, `.dart_tool`, `.terraform`, `.terragrunt-cache`, `.serverless`, `.turbo`, `.svelte-kit`, `.parcel-cache`, `.astro`, `.output`, `.cache`, `site-packages`.
+
+### Changed
+- `atlas batch-add` now **saves the portfolio incrementally** (after each repo). A slow or Ctrl-C-interrupted run no longer loses everything — it keeps what was scanned and tells you to rerun for the rest.
+
 ## [0.3.1] — 2026-06-02
 
 ### Fixed

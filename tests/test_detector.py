@@ -2,6 +2,8 @@
 from __future__ import annotations
 
 import json
+import os
+from pathlib import Path
 
 
 from atlas.detector import (
@@ -145,6 +147,63 @@ class TestWalkFiles:
         (deep / "deep.py").write_text("pass")
         files = list(walk_files(tmp_path))
         assert any(f.name == "deep.py" for f in files)
+
+    def test_skips_custom_named_virtualenv(self, tmp_path):
+        """A virtualenv with a non-standard name is pruned via its pyvenv.cfg marker."""
+        env = tmp_path / "venv_linux"
+        (env / "lib").mkdir(parents=True)
+        (env / "pyvenv.cfg").write_text("home = /usr/bin\n")
+        (env / "lib" / "site.py").write_text("pass")
+        (tmp_path / "app.py").write_text("x = 1")
+        names = [f.name for f in walk_files(tmp_path)]
+        assert "app.py" in names
+        assert "site.py" not in names
+        assert "pyvenv.cfg" not in names
+
+    def test_skips_vendor_dir(self, tmp_path):
+        """Go/PHP-style vendored deps are excluded."""
+        v = tmp_path / "vendor" / "pkg"
+        v.mkdir(parents=True)
+        (v / "lib.go").write_text("package pkg")
+        (tmp_path / "main.go").write_text("package main")
+        names = [f.name for f in walk_files(tmp_path)]
+        assert "main.go" in names
+        assert "lib.go" not in names
+
+    def test_prunes_skip_dirs_not_just_filters(self, tmp_path, monkeypatch):
+        """walk_files must PRUNE SKIP_DIRS during traversal, not descend-then-filter.
+
+        Regression guard for the ~110s-per-repo perf bug: rglob('*') traversed
+        node_modules (stat-ing every vendored file) before filtering. os.walk with
+        dirnames pruning never descends. Teeth against both regressions:
+        - revert to rglob  -> os.walk unused -> `visited` empty -> first assert fails
+        - remove the prune -> node_modules descended -> second assert fails
+        """
+        import atlas.detector as det
+
+        (tmp_path / "app.py").write_text("x = 1")
+        nested = tmp_path / "node_modules" / "pkg" / "sub"
+        nested.mkdir(parents=True)
+        (nested / "vendored.py").write_text("y = 1")
+
+        visited: list[str] = []
+        real_walk = os.walk
+
+        def tracking_walk(top, *args, **kwargs):
+            for dirpath, dirnames, filenames in real_walk(top, *args, **kwargs):
+                visited.append(str(dirpath))
+                yield dirpath, dirnames, filenames
+
+        monkeypatch.setattr(det.os, "walk", tracking_walk)
+
+        names = [f.name for f in det.walk_files(tmp_path)]
+
+        assert "app.py" in names
+        assert "vendored.py" not in names
+        assert visited, "walk_files must use os.walk (not rglob)"
+        assert not any("node_modules" in Path(v).parts for v in visited), (
+            "node_modules must be pruned from traversal, not just filtered from results"
+        )
 
 
 # ---------------------------------------------------------------------------
