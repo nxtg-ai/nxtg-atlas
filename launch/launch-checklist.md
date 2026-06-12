@@ -29,6 +29,8 @@
 - [ ] README GIF renders correctly on GitHub (N-07)
 - [x] `atlas --help` shows clean output — verified, 25 commands
 - [x] `atlas init && atlas add . && atlas scan && atlas status` works end-to-end — commands verified present
+- [x] **Buyer first-run validated on a real 33-repo machine (v0.3.2)** — found+fixed a launch-killer: `batch-add ~/projects` hung past 2min and persisted nothing because the scanner traversed `node_modules`/`.venv` (rglob, not pruned). Fixed → ~220× faster per repo; `batch-add` now completes + saves incrementally. **This is the install-then-scan experience a HN reader actually hits.**
+- [ ] _(follow-up, non-blocking)_ Parallelize `batch-add`/`scan` across cores — would cut a 33-repo scan from ~133s → ~17s. Strong "wow" enhancement (v0.3.3), not a launch blocker.
 - [x] GitHub Action consumable cross-repo (`uses: nxtg-ai/atlas-action@v1`) — **proven, PR #8 merged**
 - [x] GitHub repo description and topics set — verified good (8 topics, homepage set)
 - [x] atlas-action published to GitHub Marketplace — **LIVE** (listing returns 200), prior "pending click" was stale
