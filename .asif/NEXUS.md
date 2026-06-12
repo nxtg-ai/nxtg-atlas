@@ -496,6 +496,14 @@
 - Date target: Tue–Thu 8–9am PDT, Jun 3+ (clears A7 >14d post-RTD-flag-death).
 **Status**: BLOCKED-ON-HN-ACCOUNT + ASIF-RISK-ACCEPT. Body is launch-ready; do NOT fire from karma-1.
 
+### Product status as of 2026-06-12 (Atlas team)
+PyPI **v0.3.2** is the current release. Ships since 2026-06-02:
+- **v0.3.1** — fixed invalid `--json` output in narrow terminals (`compare/search/top` used `console.print`; Rich width-wrapped long paths → broken JSON). Plain `print` now.
+- **v0.3.2** — buyer-grade first-run dogfood on a real 33-repo machine caught a **launch-killer**: `batch-add ~/projects` hung >2min and persisted nothing because the scanner traversed `node_modules`/`.venv` (`rglob`, not pruned). Fixed → ~220× faster (`os.walk` + dirname prune + `pyvenv.cfg` venv detection); `batch-add` now saves incrementally. Verified on a clean wheel install.
+- **Parallelization investigated + REJECTED** — thread workers measured 10× *slower* (GIL-bound LOC counting + git-subprocess contention); reverted, never shipped.
+- **Full buyer command-surface QA pass (2026-06-12)**: `doctor/connections/inspect/compare/export{json,csv,md}/top/trends/badge/search/status` all clean on a real 8-repo portfolio. No defects.
+**Product is launch-grade.** 2,983 tests green. Only launch blocker is the HN account/karma above (Asif-personal, human-gated, queued for his revenue sitting). **Zero open product work.**
+
 ### N-09: Pro Tier / Monetization
 **Pillar**: DISTRIBUTION | **Status**: DECIDED | **Priority**: P2
 **What**: Open Core model. Free (single repo) + Pro $49 one-time (cross-project intelligence, portfolio dashboard).
