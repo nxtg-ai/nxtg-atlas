@@ -502,7 +502,9 @@ PyPI **v0.3.2** is the current release. Ships since 2026-06-02:
 - **v0.3.2** — buyer-grade first-run dogfood on a real 33-repo machine caught a **launch-killer**: `batch-add ~/projects` hung >2min and persisted nothing because the scanner traversed `node_modules`/`.venv` (`rglob`, not pruned). Fixed → ~220× faster (`os.walk` + dirname prune + `pyvenv.cfg` venv detection); `batch-add` now saves incrementally. Verified on a clean wheel install.
 - **Parallelization investigated + REJECTED** — thread workers measured 10× *slower* (GIL-bound LOC counting + git-subprocess contention); reverted, never shipped.
 - **Full buyer command-surface QA pass (2026-06-12)**: `doctor/connections/inspect/compare/export{json,csv,md}/top/trends/badge/search/status` all clean on a real 8-repo portfolio. No defects.
-**Product is launch-grade.** 2,983 tests green. Only launch blocker is the HN account/karma above (Asif-personal, human-gated, queued for his revenue sitting). **Zero open product work.**
+**Product is launch-grade.** Only launch blocker is the HN account/karma above (Asif-personal, human-gated, queued for his revenue sitting).
+
+**Update 2026-06-13 (Atlas team, MAXBURN)**: shipped **cross-project LLM model-version drift detection** — the named A-wedge scope (`detect_ai_models` + drift/older-pin intelligence in `_find_ai_patterns`), the most on-narrative capability for the launch's "AI Engineering Teams" audience. Detector knew SDK presence (N-21/N-27) but not *which model*; now `atlas inspect/connections/doctor/export` surface pinned model IDs and flag drift (one provider, differing versions across projects) + older-generation pins. Detection-method validated on real repos (worst case 32.8s→0.72s, false positives eliminated); live drift correctly flagged across dx3/Faultline/geo-grader. Commits `07d2918` + `512303f`, 3,005 tests green. **No version bump** — publish changes what HN visitors install, so it rolls into the next release on Asif's launch timing (not a separate gate). "Zero open product work" is again true after this.
 
 ### N-09: Pro Tier / Monetization
 **Pillar**: DISTRIBUTION | **Status**: DECIDED | **Priority**: P2
