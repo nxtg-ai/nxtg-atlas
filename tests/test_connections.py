@@ -1143,6 +1143,27 @@ class TestModelDrift:
         drift = [c for c in conns if "model drift" in c.detail]
         assert len(drift) == 0
 
+    def test_no_drift_when_identical_multimodel_sets(self):
+        # Deliberate tiering (opus + haiku) replicated identically across
+        # projects is consistency, not drift — must NOT flag "align versions".
+        projects = [
+            _proj("a", ai_tools=["x"], ai_models=["claude-opus-4-8", "claude-haiku-4-5"]),
+            _proj("b", ai_tools=["x"], ai_models=["claude-haiku-4-5", "claude-opus-4-8"]),
+        ]
+        conns = _find_ai_patterns(projects)
+        drift = [c for c in conns if "model drift" in c.detail]
+        assert len(drift) == 0
+
+    def test_drift_when_sets_differ(self):
+        # Same provider, overlapping but non-identical sets -> genuine drift.
+        projects = [
+            _proj("a", ai_tools=["x"], ai_models=["claude-opus-4-8", "claude-haiku-4-5"]),
+            _proj("b", ai_tools=["x"], ai_models=["claude-opus-4-8"]),
+        ]
+        conns = _find_ai_patterns(projects)
+        drift = [c for c in conns if "model drift" in c.detail]
+        assert len(drift) == 1
+
     def test_no_drift_when_single_project(self):
         # 2 versions but in ONE project — not cross-project portfolio drift
         projects = [

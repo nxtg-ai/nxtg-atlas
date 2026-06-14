@@ -1816,26 +1816,28 @@ def _find_ai_patterns(projects: list[Project]) -> list[Connection]:
             severity="warning",
         ))
 
-    # Model-version drift — one provider pinned to 2+ distinct model versions
-    # across 2+ projects (e.g. claude-opus-4-8 here, claude-3-opus there).
-    provider_models: dict[str, set[str]] = defaultdict(set)
-    provider_projects: dict[str, set[str]] = defaultdict(set)
+    # Model-version drift — projects using one provider DISAGREE on which model
+    # versions they pin (e.g. claude-opus-4-8 here, claude-3-opus there). An
+    # identical pin-set across projects — including deliberate tiering like
+    # opus+haiku replicated everywhere — is consistency, not drift, so we flag
+    # only when the per-project model sets actually differ.
+    provider_proj_models: dict[str, dict[str, set[str]]] = defaultdict(dict)
     for proj in projects:
         for model in proj.tech_stack.ai_models:
             provider = _model_provider(model)
             if provider == "Other":
                 continue
-            provider_models[provider].add(model)
-            provider_projects[provider].add(proj.name)
-    for provider in sorted(provider_models):
-        prov_models = provider_models[provider]
-        prov_projs = provider_projects[provider]
-        if len(prov_models) >= 2 and len(prov_projs) >= 2:
-            sample = ", ".join(sorted(prov_models)[:4])
+            provider_proj_models[provider].setdefault(proj.name, set()).add(model)
+    for provider in sorted(provider_proj_models):
+        proj_models = provider_proj_models[provider]
+        distinct_sets = {frozenset(ms) for ms in proj_models.values()}
+        if len(proj_models) >= 2 and len(distinct_sets) >= 2:
+            all_models = sorted({m for ms in proj_models.values() for m in ms})
+            sample = ", ".join(all_models[:4])
             connections.append(Connection(
                 type="ai_divergence",
-                detail=f"{provider} model drift: {sample} pinned across {len(prov_projs)} projects — align versions",
-                projects=sorted(prov_projs),
+                detail=f"{provider} model drift: {sample} pinned across {len(proj_models)} projects — align versions",
+                projects=sorted(proj_models),
                 severity="warning",
             ))
 
