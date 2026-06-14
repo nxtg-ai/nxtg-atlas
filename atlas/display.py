@@ -1602,6 +1602,10 @@ def show_project_card(project: Project):
         ai = ", ".join(project.tech_stack.ai_tools[:6])
         lines.append(f"  [bold]AI/ML:[/bold]      {ai}")
 
+    if project.tech_stack.ai_models:
+        models = ", ".join(project.tech_stack.ai_models[:6])
+        lines.append(f"  [bold]AI Models:[/bold]  {models}")
+
     if project.tech_stack.quality_tools:
         qt = ", ".join(project.tech_stack.quality_tools[:6])
         lines.append(f"  [bold]Quality:[/bold]    {qt}")

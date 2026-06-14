@@ -342,6 +342,7 @@ def _project_has_tech(project, term: str) -> bool:
         + ts.infrastructure
         + ts.security_tools
         + ts.ai_tools
+        + ts.ai_models
         + ts.quality_tools
         + ts.testing_frameworks
         + ts.package_managers

@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 from pathlib import Path
 
 SKIP_DIRS = frozenset({
@@ -418,6 +419,94 @@ def detect_ai_tools(project_path: Path) -> list[str]:
         tools.append("DVC")
 
     return tools
+
+
+# Strict, version-specific LLM model identifiers. Each alternative requires a
+# distinctive, version-bearing token so ordinary prose ("we use gpt to…") and
+# loose strings (a bogus "claude-1000") never match. Validated against real
+# repos before shipping — see the cross-project model-drift intelligence in
+# connections._find_ai_patterns that consumes these.
+_MODEL_ID_PATTERNS = [
+    r"claude-(?:[0-9]+-)*(?:opus|sonnet|haiku|instant)[\w.\-]*",  # claude-opus-4-8, claude-3-5-sonnet-20241022
+    r"claude-2(?:\.[0-9]+)?",                                      # legacy claude-2 / claude-2.1
+    r"gpt-4o(?:-[\w.\-]+)?",                                       # gpt-4o, gpt-4o-mini, gpt-4o-search-preview
+    r"gpt-4(?:\.[0-9])?(?:-[\w.\-]+)?",                            # gpt-4, gpt-4-turbo, gpt-4.1
+    r"gpt-3\.5-turbo[\w.\-]*",                                     # gpt-3.5-turbo*
+    r"o[13]-(?:mini|preview)(?:-[\w.\-]+)?",                       # o1-mini, o3-mini (bare o1/o3 too noisy)
+    r"text-embedding-[\w.\-]+",                                    # text-embedding-3-large
+    r"text-davinci-[0-9]+",                                        # text-davinci-003
+    r"gemini-[0-9][\w.\-]*",                                       # gemini-2.0-flash, gemini-3-pro-preview
+    r"mi(?:stral|xtral)-[\w.\-]+",                                 # mistral-large, mixtral-8x7b
+]
+_MODEL_ID_RX = re.compile(r"\b(" + "|".join(_MODEL_ID_PATTERNS) + r")\b")
+
+# Source code + small config carry real model *pins*; docs (.md) carry mere
+# *mentions*, tests enumerate models (false drift), and bulk .json is data — all
+# excluded so the signal is "what this project's code actually calls".
+_MODEL_CODE_EXT = {".py", ".js", ".ts", ".tsx", ".jsx", ".mjs", ".go", ".rs", ".rb", ".java"}
+_MODEL_CONFIG_EXT = {".env", ".toml", ".yaml", ".yml", ".ini", ".cfg"}
+_MODEL_SCAN_MAX_BYTES = 512 * 1024   # skip large bundles/data files
+_MODEL_SCAN_MAX_FILES = 2000         # backstop for pathological trees (e.g. 50k-file data dumps)
+
+
+def _is_test_file(path: Path, root: Path) -> bool:
+    """True for test files/dirs — they enumerate models and create false drift."""
+    try:
+        parts = [p.lower() for p in path.relative_to(root).parts]
+    except ValueError:
+        parts = []
+    name = path.name.lower()
+    return (
+        "tests" in parts or "test" in parts or "__tests__" in parts
+        or name.startswith("test_") or name.endswith("_test.py")
+        or ".test." in name or ".spec." in name
+    )
+
+
+def _wants_model_scan(path: Path) -> bool:
+    """Limit reads to source + small config; admit .json only by config name."""
+    suffix = path.suffix
+    if suffix in _MODEL_CODE_EXT or suffix in _MODEL_CONFIG_EXT:
+        return True
+    name = path.name.lower()
+    if name.startswith(".env"):  # .env, .env.example, .env.local
+        return True
+    if suffix == ".json" and ("config" in name or "settings" in name):
+        return True
+    return False
+
+
+def detect_ai_models(project_path: Path) -> list[str]:
+    """Detect specific LLM model identifiers pinned in a project's source/config.
+
+    Scans source code and small config files — never docs, tests, vendored trees,
+    or bulk JSON/data — for strict, version-specific model IDs such as
+    ``claude-opus-4-8``, ``gpt-4o``, or ``gemini-2.0-flash``. Uses the pruned
+    ``walk_files`` walker plus size and file-count caps so a repo with tens of
+    thousands of data files stays fast (the v0.3.2 ``rglob`` regression class).
+    Returns a sorted, de-duplicated list, the input to cross-project model-drift
+    intelligence.
+    """
+    found: set[str] = set()
+    scanned = 0
+    for path in walk_files(project_path):
+        if _is_test_file(path, project_path) or not _wants_model_scan(path):
+            continue
+        try:
+            if path.stat().st_size > _MODEL_SCAN_MAX_BYTES:
+                continue
+        except OSError:
+            continue
+        scanned += 1
+        if scanned > _MODEL_SCAN_MAX_FILES:
+            break
+        try:
+            content = path.read_text(errors="ignore")
+        except OSError:
+            continue
+        for match in _MODEL_ID_RX.finditer(content):
+            found.add(match.group(1))
+    return sorted(found)
 
 
 def detect_security_tools(project_path: Path) -> list[str]:

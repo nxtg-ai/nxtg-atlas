@@ -14,6 +14,7 @@ class TechStack:
     infrastructure: list[str] = field(default_factory=list)
     security_tools: list[str] = field(default_factory=list)
     ai_tools: list[str] = field(default_factory=list)
+    ai_models: list[str] = field(default_factory=list)
     quality_tools: list[str] = field(default_factory=list)
     testing_frameworks: list[str] = field(default_factory=list)
     package_managers: list[str] = field(default_factory=list)
@@ -179,6 +180,7 @@ class Project:
                 "infrastructure": self.tech_stack.infrastructure,
                 "security_tools": self.tech_stack.security_tools,
                 "ai_tools": self.tech_stack.ai_tools,
+                "ai_models": self.tech_stack.ai_models,
                 "quality_tools": self.tech_stack.quality_tools,
                 "testing_frameworks": self.tech_stack.testing_frameworks,
                 "package_managers": self.tech_stack.package_managers,
@@ -289,6 +291,7 @@ class Project:
                 infrastructure=ts.get("infrastructure", []),
                 security_tools=ts.get("security_tools", []),
                 ai_tools=ts.get("ai_tools", []),
+                ai_models=ts.get("ai_models", []),
                 quality_tools=ts.get("quality_tools", []),
                 testing_frameworks=ts.get("testing_frameworks", []),
                 package_managers=ts.get("package_managers", []),

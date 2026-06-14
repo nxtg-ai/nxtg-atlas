@@ -8,6 +8,7 @@ from atlas.detector import (
     count_files,
     count_loc,
     count_test_files,
+    detect_ai_models,
     detect_ai_tools,
     detect_databases,
     detect_frameworks,
@@ -103,6 +104,11 @@ def scan_project(project_path: Path) -> Project:
     infrastructure = detect_infrastructure(path)
     security_tools = detect_security_tools(path)
     ai_tools = detect_ai_tools(path)
+    # Run unconditionally (not gated on ai_tools): many projects pin models in
+    # source via an SDK we don't enumerate (Gemini) or a raw HTTP call, so gating
+    # on detected SDKs silently zeroes out real model signal. detect_ai_models is
+    # internally bounded (pruned walk + size/file caps) so the cost stays small.
+    ai_models = detect_ai_models(path)
     quality_tools = detect_quality_tools(path)
     testing_frameworks = detect_testing_frameworks(path)
     package_managers = detect_package_managers(path)
@@ -187,6 +193,7 @@ def scan_project(project_path: Path) -> Project:
         infrastructure=infrastructure,
         security_tools=security_tools,
         ai_tools=ai_tools,
+        ai_models=ai_models,
         quality_tools=quality_tools,
         testing_frameworks=testing_frameworks,
         package_managers=package_managers,

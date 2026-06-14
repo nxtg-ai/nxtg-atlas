@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import json
 
-from atlas.detector import detect_ai_tools
+from atlas.detector import detect_ai_models, detect_ai_tools
 
 
 class TestPythonAIDeps:
@@ -196,3 +196,79 @@ class TestEmptyProject:
         (tmp_path / "package.json").write_text(json.dumps(pkg))
         tools = detect_ai_tools(tmp_path)
         assert tools.count("OpenAI SDK") == 1
+
+
+class TestDetectAIModels:
+    def test_detects_claude_model_in_python(self, tmp_path):
+        (tmp_path / "client.py").write_text('MODEL = "claude-opus-4-8"\n')
+        assert "claude-opus-4-8" in detect_ai_models(tmp_path)
+
+    def test_detects_openai_model_in_typescript(self, tmp_path):
+        (tmp_path / "agent.ts").write_text('const model = "gpt-4o-mini";\n')
+        assert "gpt-4o-mini" in detect_ai_models(tmp_path)
+
+    def test_detects_dated_anthropic_id(self, tmp_path):
+        (tmp_path / "cfg.py").write_text('m = "claude-3-5-sonnet-20241022"\n')
+        assert "claude-3-5-sonnet-20241022" in detect_ai_models(tmp_path)
+
+    def test_detects_gemini_and_mistral(self, tmp_path):
+        (tmp_path / "providers.py").write_text(
+            'A = "gemini-2.0-flash"\nB = "mixtral-8x7b"\n'
+        )
+        models = detect_ai_models(tmp_path)
+        assert "gemini-2.0-flash" in models
+        assert "mixtral-8x7b" in models
+
+    def test_detects_in_env_and_toml(self, tmp_path):
+        (tmp_path / ".env.example").write_text("OPENAI_MODEL=gpt-4o\n")
+        (tmp_path / "config.toml").write_text('model = "claude-sonnet-4-6"\n')
+        models = detect_ai_models(tmp_path)
+        assert "gpt-4o" in models
+        assert "claude-sonnet-4-6" in models
+
+    def test_returns_sorted_and_deduped(self, tmp_path):
+        (tmp_path / "a.py").write_text('"gpt-4o" "gpt-4o" "claude-opus-4-8"\n')
+        models = detect_ai_models(tmp_path)
+        assert models == sorted(set(models))
+        assert models.count("gpt-4o") == 1
+
+    def test_ignores_test_files(self, tmp_path):
+        # Test fixtures enumerate models — would create false drift
+        tdir = tmp_path / "tests"
+        tdir.mkdir()
+        (tdir / "test_models.py").write_text('"gpt-3.5-turbo" "claude-instant-1.2"\n')
+        (tmp_path / "main.py").write_text('"gpt-4o"\n')
+        models = detect_ai_models(tmp_path)
+        assert "gpt-4o" in models
+        assert "gpt-3.5-turbo" not in models
+
+    def test_ignores_docs_markdown(self, tmp_path):
+        # Docs are mentions, not pins
+        (tmp_path / "README.md").write_text("We considered gpt-4o and claude-opus-4-8.\n")
+        assert detect_ai_models(tmp_path) == []
+
+    def test_no_false_positive_on_bogus_version(self, tmp_path):
+        # 'claude-1000' is not a real model family — must not match
+        (tmp_path / "x.py").write_text('label = "claude-1000-internal-id"\n')
+        assert detect_ai_models(tmp_path) == []
+
+    def test_does_not_match_bare_words(self, tmp_path):
+        (tmp_path / "prose.py").write_text("# we use claude and gpt here\n")
+        assert detect_ai_models(tmp_path) == []
+
+    def test_skips_large_files(self, tmp_path):
+        big = tmp_path / "huge.py"
+        big.write_text("x = 1\n" * 100 + '"gpt-4o"\n' + "y = 2\n" * 200_000)
+        assert big.stat().st_size > 512 * 1024
+        assert detect_ai_models(tmp_path) == []
+
+    def test_ignores_bulk_data_json(self, tmp_path):
+        # .json admitted only by config-ish name, not arbitrary data dumps
+        (tmp_path / "data-0001.json").write_text('{"note": "gpt-4o"}\n')
+        assert detect_ai_models(tmp_path) == []
+        (tmp_path / "model.config.json").write_text('{"model": "gpt-4o"}\n')
+        assert "gpt-4o" in detect_ai_models(tmp_path)
+
+    def test_empty_project(self, tmp_path):
+        (tmp_path / "main.py").write_text("print('hello')\n")
+        assert detect_ai_models(tmp_path) == []

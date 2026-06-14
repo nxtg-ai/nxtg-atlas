@@ -845,6 +845,8 @@ def _project_details(projects: list[Project]) -> list[str]:
             lines.append(f"- **Security**: {', '.join(p.tech_stack.security_tools[:8])}")
         if p.tech_stack.ai_tools:
             lines.append(f"- **AI/ML**: {', '.join(p.tech_stack.ai_tools[:8])}")
+        if p.tech_stack.ai_models:
+            lines.append(f"- **AI Models**: {', '.join(p.tech_stack.ai_models[:8])}")
         if p.tech_stack.quality_tools:
             lines.append(f"- **Quality**: {', '.join(p.tech_stack.quality_tools[:8])}")
         if p.tech_stack.testing_frameworks:
@@ -1971,7 +1973,7 @@ def build_csv_report(portfolio: Portfolio) -> str:
         "Source Files", "Test Files", "Total Files", "LOC",
         "Languages", "Frameworks", "Databases",
         "Infrastructure", "Security Tools", "Quality Tools",
-        "Testing Frameworks", "Package Managers", "AI/ML Tools",
+        "Testing Frameworks", "Package Managers", "AI/ML Tools", "AI Models",
         "Docs Artifacts", "CI Config", "Runtime Versions", "Build Tools", "API Specs",
         "Monitoring Tools", "Auth Tools", "Messaging Tools", "Deploy Targets", "State Management",
         "CSS Frameworks", "Bundlers", "ORM/DB Clients", "i18n", "Validation", "Logging",
@@ -2006,6 +2008,7 @@ def build_csv_report(portfolio: Portfolio) -> str:
             "; ".join(ts.testing_frameworks),
             "; ".join(ts.package_managers),
             "; ".join(ts.ai_tools),
+            "; ".join(ts.ai_models),
             "; ".join(ts.docs_artifacts),
             "; ".join(ts.ci_config),
             "; ".join(f"{k}={v}" for k, v in ts.runtime_versions.items()),

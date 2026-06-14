@@ -4,6 +4,9 @@ All notable changes to `nxtg-atlas` are documented here. The format is based on 
 
 ## [Unreleased]
 
+### Added
+- **Cross-project LLM model-version drift detection.** A new `detect_ai_models()` scanner finds the specific model identifiers a project pins in its source/config (e.g. `claude-opus-4-8`, `gpt-4o`, `gemini-2.0-flash`) — going beyond "this project uses the Anthropic SDK" to "this project pins *this model*". Surfaced per-project in `atlas inspect` (**AI Models**), in `atlas search`, and in JSON/CSV/Markdown export. Cross-project intelligence in `atlas connections`/`atlas doctor` now flags **model drift** (one provider pinned to multiple versions across the portfolio — e.g. `claude-3-opus` in one repo, `claude-opus-4-8` in another) and **older-generation model pins** (`gpt-3.5-turbo`, `claude-instant`, `text-davinci-*`) as upgrade candidates. Detection is bounded for speed (pruned `walk_files` walk + size/file caps, docs and tests excluded) and uses strict version-specific patterns so prose and bogus strings never match. 20 tests added (suite 2,983 → 3,003).
+
 ## [0.3.2] — 2026-06-12
 
 ### Fixed

@@ -1728,6 +1728,25 @@ def _find_quality_patterns(projects: list[Project]) -> list[Connection]:
     return connections[:10]
 
 
+def _model_provider(model: str) -> str:
+    """Map a model identifier to its provider family for drift grouping."""
+    if model.startswith("claude"):
+        return "Anthropic"
+    if model.startswith(("gpt-", "o1-", "o3-", "text-embedding", "text-davinci")):
+        return "OpenAI"
+    if model.startswith("gemini"):
+        return "Google"
+    if model.startswith(("mistral", "mixtral")):
+        return "Mistral"
+    return "Other"
+
+
+# Older-generation model pins worth surfacing as upgrade candidates. Conservative
+# on purpose — only unambiguously superseded families, matched by prefix so dated
+# variants (claude-instant-1.2, gpt-3.5-turbo-0613) are covered.
+_OLDER_MODEL_PREFIXES = ("gpt-3.5", "text-davinci", "claude-instant", "claude-2")
+
+
 def _find_ai_patterns(projects: list[Project]) -> list[Connection]:
     """Detect cross-project AI/ML patterns."""
     connections: list[Connection] = []
@@ -1794,6 +1813,44 @@ def _find_ai_patterns(projects: list[Project]) -> list[Connection]:
             type="ai_gap",
             detail=f"{len(ml_no_tracking)} ML projects lack experiment tracking — add MLflow/W&B",
             projects=ml_no_tracking,
+            severity="warning",
+        ))
+
+    # Model-version drift — one provider pinned to 2+ distinct model versions
+    # across 2+ projects (e.g. claude-opus-4-8 here, claude-3-opus there).
+    provider_models: dict[str, set[str]] = defaultdict(set)
+    provider_projects: dict[str, set[str]] = defaultdict(set)
+    for proj in projects:
+        for model in proj.tech_stack.ai_models:
+            provider = _model_provider(model)
+            if provider == "Other":
+                continue
+            provider_models[provider].add(model)
+            provider_projects[provider].add(proj.name)
+    for provider in sorted(provider_models):
+        prov_models = provider_models[provider]
+        prov_projs = provider_projects[provider]
+        if len(prov_models) >= 2 and len(prov_projs) >= 2:
+            sample = ", ".join(sorted(prov_models)[:4])
+            connections.append(Connection(
+                type="ai_divergence",
+                detail=f"{provider} model drift: {sample} pinned across {len(prov_projs)} projects — align versions",
+                projects=sorted(prov_projs),
+                severity="warning",
+            ))
+
+    # Older-generation model pins — upgrade candidates.
+    older_by_project: dict[str, set[str]] = defaultdict(set)
+    for proj in projects:
+        for model in proj.tech_stack.ai_models:
+            if model.startswith(_OLDER_MODEL_PREFIXES):
+                older_by_project[proj.name].add(model)
+    if older_by_project:
+        sample = ", ".join(sorted({m for ms in older_by_project.values() for m in ms})[:4])
+        connections.append(Connection(
+            type="ai_gap",
+            detail=f"{len(older_by_project)} project(s) pin older-generation models ({sample}) — consider upgrading",
+            projects=sorted(older_by_project),
             severity="warning",
         ))
 

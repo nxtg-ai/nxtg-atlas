@@ -63,7 +63,7 @@ from atlas.models import GitInfo, HealthScore, Project, TechStack
 
 def _proj(name: str, frameworks=None, key_deps=None, databases=None,
           infrastructure=None, security_tools=None, quality_tools=None,
-          ai_tools=None, testing_frameworks=None, package_managers=None,
+          ai_tools=None, ai_models=None, testing_frameworks=None, package_managers=None,
           docs_artifacts=None, ci_config=None, runtime_versions=None,
           build_tools=None, api_specs=None, monitoring_tools=None,
           auth_tools=None, messaging_tools=None, deploy_targets=None,
@@ -82,6 +82,7 @@ def _proj(name: str, frameworks=None, key_deps=None, databases=None,
             security_tools=security_tools or [],
             quality_tools=quality_tools or [],
             ai_tools=ai_tools or [],
+            ai_models=ai_models or [],
             testing_frameworks=testing_frameworks or [],
             package_managers=package_managers or [],
             docs_artifacts=docs_artifacts or [],
@@ -1118,6 +1119,77 @@ class TestFindAIPatterns:
         ai_types = {c.type for c in conns if "ai" in c.type}
         assert "shared_ai" in ai_types
         assert "ai_divergence" in ai_types
+
+
+class TestModelDrift:
+    def test_model_drift_same_provider_different_versions(self):
+        projects = [
+            _proj("a", ai_tools=["Anthropic SDK"], ai_models=["claude-opus-4-8"]),
+            _proj("b", ai_tools=["Anthropic SDK"], ai_models=["claude-3-opus"]),
+        ]
+        conns = _find_ai_patterns(projects)
+        drift = [c for c in conns if c.type == "ai_divergence" and "model drift" in c.detail]
+        assert len(drift) == 1
+        assert "Anthropic" in drift[0].detail
+        assert drift[0].severity == "warning"
+        assert sorted(drift[0].projects) == ["a", "b"]
+
+    def test_no_drift_when_same_model_everywhere(self):
+        projects = [
+            _proj("a", ai_tools=["Anthropic SDK"], ai_models=["claude-opus-4-8"]),
+            _proj("b", ai_tools=["Anthropic SDK"], ai_models=["claude-opus-4-8"]),
+        ]
+        conns = _find_ai_patterns(projects)
+        drift = [c for c in conns if "model drift" in c.detail]
+        assert len(drift) == 0
+
+    def test_no_drift_when_single_project(self):
+        # 2 versions but in ONE project — not cross-project portfolio drift
+        projects = [
+            _proj("a", ai_tools=["OpenAI"], ai_models=["gpt-4o", "gpt-4o-mini"]),
+        ]
+        conns = _find_ai_patterns(projects)
+        drift = [c for c in conns if "model drift" in c.detail]
+        assert len(drift) == 0
+
+    def test_drift_is_per_provider(self):
+        # Anthropic drifts, OpenAI is consistent — only one drift connection
+        projects = [
+            _proj("a", ai_tools=["x"], ai_models=["claude-opus-4-8", "gpt-4o"]),
+            _proj("b", ai_tools=["x"], ai_models=["claude-3-opus", "gpt-4o"]),
+        ]
+        conns = _find_ai_patterns(projects)
+        drift = [c for c in conns if "model drift" in c.detail]
+        assert len(drift) == 1
+        assert "Anthropic" in drift[0].detail
+
+    def test_older_generation_models_flagged(self):
+        projects = [
+            _proj("a", ai_tools=["OpenAI"], ai_models=["gpt-3.5-turbo"]),
+            _proj("b", ai_tools=["Anthropic SDK"], ai_models=["claude-instant-1.2"]),
+        ]
+        conns = _find_ai_patterns(projects)
+        older = [c for c in conns if c.type == "ai_gap" and "older-generation" in c.detail]
+        assert len(older) == 1
+        assert sorted(older[0].projects) == ["a", "b"]
+
+    def test_current_models_not_flagged_as_older(self):
+        projects = [
+            _proj("a", ai_tools=["Anthropic SDK"], ai_models=["claude-opus-4-8"]),
+            _proj("b", ai_tools=["OpenAI"], ai_models=["gpt-4o"]),
+        ]
+        conns = _find_ai_patterns(projects)
+        older = [c for c in conns if "older-generation" in c.detail]
+        assert len(older) == 0
+
+    def test_no_models_no_drift_connections(self):
+        projects = [
+            _proj("a", ai_tools=["Anthropic SDK"]),
+            _proj("b", ai_tools=["OpenAI"]),
+        ]
+        conns = _find_ai_patterns(projects)
+        assert not [c for c in conns if "model drift" in c.detail]
+        assert not [c for c in conns if "older-generation" in c.detail]
 
 
 # ---------------------------------------------------------------------------
