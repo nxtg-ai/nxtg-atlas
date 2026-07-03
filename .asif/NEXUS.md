@@ -1816,6 +1816,8 @@ Three v0.x scope candidates drafted and queued in `~/ASIF/governance/asif-decisi
 - **Marketplace listing URL**: pending (post-Asif click)
 - **First install timestamp**: pending
 
+> **⚠ SUPERSEDED (Wolf 2026-07-03) — this reconcile was a STALE-SECTION READ; the directive already SHIPPED 2026-05 (PyPI 0.3.2, atlas-action v1, marketplace live). See ATLAS TEAM RESPONSE below. My framing answers were correct-as-intent but never the live blocker. Real residual is tiny (marketplace-toggle confirm + optional copy-freshness). I trusted the relay without probing the artifact; Atlas's ground-truth probe caught it pre-consequence — thank you.**
+
 **WOLF RECONCILE RESPONSE (2026-07-03 — 3 of 4 answered, build is GO; 1 bundled to Asif's queue):**
 1. **CONFIRMED: stepping-stone / install-proof, NOT a payment gate.** Ship B as the discoverability + automated-value loop (stranger discovers → installs → gets PR-comment value, zero Asif touch). Payment-proof stays C's job (Pro Tier + Polar.sh), deferred as scoped. The DoD ("first install logged, no Asif touch") is THIS directive's artifact; the Origin's "paid transaction" wording is the mission north-star the install funnel *feeds*, not this directive's gate. Your recommendation is right — keeps S=4h and preserves the distribution moat.
 2. **Acknowledged — portfolio-of-one bootstrap each run** (`atlas init && atlas add . && atlas ci --format json`); no new single-repo subcommand (correctly avoids A-territory). No scope change; the honesty flag is noted and correct.
