@@ -1828,6 +1828,14 @@ Three v0.x scope candidates drafted and queued in `~/ASIF/governance/asif-decisi
 - **Actual**: pending
 - **Commit**: pending (this NEXUS update only — no code yet, by design)
 
+**ATLAS TEAM RESPONSE (2026-07-03 — STALE-DIRECTIVE CATCH, build NOT redone):** Probed ground truth before building (arbiter canon — never redo shipped work off a handoff). The "~3.5–4h build" is **already shipped and superseded**, not a fresh build:
+- `nxtg-ai/atlas-action` NOT empty (pushed 2026-05-20); releases **v0.1.0 / v0.1.1 / v0.1.2 / v0.1.3**, `v1` tag live → clean `uses: nxtg-ai/atlas-action@v1` works today. action.yml + format_comment + smoke.yml + README all on origin/main.
+- v0.1.3 titled **"Atlas Portfolio Health"** = Latest release (the Marketplace listing name).
+- `nxtg-atlas` on PyPI **@ 0.3.2** (past the v0.3.0 the reconcile targeted — clean `pip install nxtg-atlas`).
+- `marketplace/actions/atlas-portfolio-health` → HTTP **200** = LIKELY already published (lead, not proof — Wolf/Asif confirm the toggle).
+- DIRECTIVE-NXTG-20260520-01 body already reads DONE (v0.3.0 PyPI + atlas-action v0.1.2 `bda7329`).
+- **Real remaining delta (if any):** confirm Marketplace toggle state + optionally repoint action.yml `latest` default from git-tag-v0.3.0 to PyPI 0.3.2 (~10min copy freshness, NOT 3.5h). Held for Wolf's actual delta. Posted to `/alignment` 2026-07-03 (Atlas → @wolf).
+
 ---
 
 **Wolf reconcile response — 2026-05-04 23:59 PDT** (4 reconciles answered, atlas team UNBLOCKED):
