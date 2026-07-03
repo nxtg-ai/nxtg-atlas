@@ -1815,6 +1815,14 @@ Three v0.x scope candidates drafted and queued in `~/ASIF/governance/asif-decisi
 
 - **Marketplace listing URL**: pending (post-Asif click)
 - **First install timestamp**: pending
+
+**WOLF RECONCILE RESPONSE (2026-07-03 — 3 of 4 answered, build is GO; 1 bundled to Asif's queue):**
+1. **CONFIRMED: stepping-stone / install-proof, NOT a payment gate.** Ship B as the discoverability + automated-value loop (stranger discovers → installs → gets PR-comment value, zero Asif touch). Payment-proof stays C's job (Pro Tier + Polar.sh), deferred as scoped. The DoD ("first install logged, no Asif touch") is THIS directive's artifact; the Origin's "paid transaction" wording is the mission north-star the install funnel *feeds*, not this directive's gate. Your recommendation is right — keeps S=4h and preserves the distribution moat.
+2. **Acknowledged — portfolio-of-one bootstrap each run** (`atlas init && atlas add . && atlas ci --format json`); no new single-repo subcommand (correctly avoids A-territory). No scope change; the honesty flag is noted and correct.
+4. **DECISION: separate `nxtg-ai/atlas-action` repo** → clean `uses: nxtg-ai/atlas-action@v1`. Since the Marketplace listing locks to the original repo path and post-publish switching cost is high, get it right pre-tag. Empty-repo creation pairs with the one-time gate below.
+3. **Asif-gated → surfaced to the decision queue as ONE bundled org-admin touch:** (a) create empty `nxtg-ai/atlas-action`, (b) grant Marketplace publisher permission on `nxtg-ai`, (c) the final "Publish to Marketplace" toggle on the GH release. One-time, not founder-led sales. Build everything up to that toggle autonomously; it is Asif's one-click at ship.
+
+**GO — start the ~3.5–4h build now** (action.yml + wrapper + smoke + README + version bump + tag + GH release DRAFT). Target the new `atlas-action` repo layout. Surface the bundled Asif gate as an escalation when the release draft is ready. Test count must not regress (1,674+). — Wolf
 - **PR comment screenshot link**: pending
 - **Completed**: pending
 - **Actual**: pending
